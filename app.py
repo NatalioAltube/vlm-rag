@@ -4,7 +4,8 @@
 # ----------------------------------------
 import streamlit as st
 from backend import extract_text_by_page, embed_documents_by_page, retrieve_relevant_page
-from vision_api import ask_question_to_vlm, render_page_as_image
+#from vision_api import ask_question_to_vlm, render_page_as_image
+from vision_ollama import ask_question_to_vlm, render_page_as_image
 import tempfile
 from PIL import Image
 from login import check_auth

@@ -6,14 +6,13 @@
 import os
 import fitz  # PyMuPDF
 from typing import List
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import Document as LangDocument
 from dotenv import load_dotenv
 
-# Cargar API Key desde .env
+# Cargar variables de entorno
 load_dotenv()
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
 # 1. Extraer texto por página para granularidad visual
 def extract_text_by_page(file_bytes: bytes, file_name: str) -> List[LangDocument]:
@@ -28,9 +27,13 @@ def extract_text_by_page(file_bytes: bytes, file_name: str) -> List[LangDocument
         documents.append(LangDocument(page_content=text, metadata=metadata))
     return documents
 
-# 2. Embedding por página
+# 2. Embedding por página usando modelo local
 def embed_documents_by_page(pages: List[LangDocument]) -> FAISS:
-    embeddings = OpenAIEmbeddings()
+    # Usar modelo local de sentence-transformers
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={'device': 'cpu'}  # Usar CPU por defecto
+    )
     return FAISS.from_documents(pages, embeddings)
 
 # 3. Retrieval de página más relevante

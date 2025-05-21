@@ -5,3 +5,5 @@ PyMuPDF
 streamlit
 python-dotenv
 langchain-community
+sentence-transformers
+torch
